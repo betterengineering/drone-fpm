@@ -38,7 +38,8 @@ steps:
         - ${DRONE_COMMIT_SHA}
     when:
       branch:
-        exclude: master
+        exclude:
+          - master
 
   - name: publish docker image on master build
     image: plugins/docker
@@ -54,4 +55,6 @@ steps:
         - ${DRONE_COMMIT_SHA}
         - latest
     when:
-      branch: master
+      branch:
+        include:
+          - master
