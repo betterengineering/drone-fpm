@@ -34,7 +34,7 @@ func main() {
 	}
 
 	g := generator.NewGenerator()
-	err = g.GenerateEntrypoint("assets/entrypoint.sh.templ", "entrypoint.sh", parsedFlags)
+	err = g.GenerateEntrypoint("assets/entrypoint.sh.templ", "out/entrypoint.sh", parsedFlags)
 	if err != nil {
 		log.Fatalf("error generating entrypoint - %s", err)
 	}
