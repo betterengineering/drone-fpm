@@ -5,6 +5,15 @@
 *.so
 *.dylib
 
+# Build dir
+out/
+
+# Goland
+.idea
+
+# Mac
+.DS_Store
+
 # Test binary, build with `go test -c`
 *.test
 
