@@ -13,36 +13,29 @@
 // COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-// Package generator provides mechanisms to generate an entrypoint using go template.
-package generator
+package main
 
 import (
-	"text/template"
+	"log"
+
 	"github.com/lodge93/drone-fpm/pkg/parser"
-	"os"
+	"github.com/lodge93/drone-fpm/pkg/generator"
 )
 
-// Generator is used to generate the entrypoint for the drone plugin.
-type Generator struct {}
-
-// NewGenerator creates a new, initialized generator.
-func NewGenerator() *Generator {
-	return &Generator{}
-}
-
-// GenerateEntrypoint generates an entrypoint script using the source go template and destination file using the
-// provided flags.
-func (g *Generator) GenerateEntrypoint(src string, dst string, flags []parser.ParsedFlag) error {
-	templ, err := template.ParseFiles(src)
+func main() {
+	p, err := parser.NewInitialisedParser()
 	if err != nil {
-		return err
+		log.Fatalf("error initializing parser - %s", err)
 	}
 
-	out, err := os.OpenFile(dst, os.O_WRONLY|os.O_CREATE, 0755)
+	parsedFlags, err := p.Parse()
 	if err != nil {
-		return err
+		log.Fatalf("error parsing flags - %s", err)
 	}
-	defer out.Close()
 
-	return templ.Execute(out, flags)
+	g := generator.NewGenerator()
+	err = g.GenerateEntrypoint("assets/entrypoint.sh.templ", "entrypoint.sh", parsedFlags)
+	if err != nil {
+		log.Fatalf("error generating entrypoint - %s", err)
+	}
 }
