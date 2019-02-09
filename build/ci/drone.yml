@@ -58,3 +58,14 @@ steps:
       branch:
         include:
           - master
+
+  - name: end to end test
+    image: quay.io/lodge93/drone-fpm:${DRONE_COMMIT_SHA}
+    settings:
+      name: generate-entrypoint
+      version: ${DRONE_COMMIT_SHA}
+      input_type: dir
+      output_type: deb
+      package: out/generate-entrypoint-${DRONE_COMMIT_SHA}.deb
+      deb_systemd: test/generate-entrypoint.service
+      command_arguments: out/generate-entrypoint=/usr/local/bin/
