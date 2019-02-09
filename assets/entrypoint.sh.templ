@@ -12,4 +12,4 @@ if [[ -n "${{ .EnvVar }}" ]]; then
     {{- end }}
 fi
 {{ end }}
-exec $COMMAND
+exec $COMMAND "${PLUGIN_COMMAND_ARGUMENTS}"
