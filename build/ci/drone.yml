@@ -1,5 +1,9 @@
 kind: pipeline
-name: default
+name: testing
+
+platform:
+  os: linux
+  arch: amd64
 
 steps:
   - name: test entrypoint generator
@@ -9,6 +13,15 @@ steps:
     commands:
       - make test
 
+---
+kind: pipeline
+name: linux-amd64
+
+platform:
+  os: linux
+  arch: amd64
+
+steps:
   - name: build entrypoint generator
     image: golang:1.11
     environment:
@@ -24,9 +37,10 @@ steps:
       - gem install --no-ri --no-rdoc fpm
       - make generate-entrypoint
 
-  - name: publish docker image on branch build
+  - name: dryrun
     image: plugins/docker
     settings:
+      dry_run: true
       username: lodge93+drone
       dockerfile: build/Dockerfile
       repo: quay.io/lodge93/drone-fpm
@@ -34,14 +48,13 @@ steps:
       password:
         from_secret: docker_password
       tags:
-        - ${DRONE_COMMIT_BRANCH//\//-}-${DRONE_BUILD_NUMBER}
-        - ${DRONE_COMMIT_SHA}
+        - linux-amd64
     when:
       branch:
         exclude:
           - master
 
-  - name: publish docker image on master build
+  - name: publish docker image
     image: plugins/docker
     settings:
       username: lodge93+drone
@@ -51,21 +64,176 @@ steps:
       password:
         from_secret: docker_password
       tags:
-        - ${DRONE_COMMIT_BRANCH//\//-}-${DRONE_BUILD_NUMBER}
-        - ${DRONE_COMMIT_SHA}
-        - latest
+        - linux-amd64
     when:
       branch:
         include:
           - master
 
+depends_on:
+  - testing
+
+---
+kind: pipeline
+name: linux-arm64
+
+platform:
+  os: linux
+  arch: arm64
+
+steps:
+  - name: build entrypoint generator
+    image: golang:1.11
+    environment:
+      GO111MODULE: on
+    commands:
+      - make build
+
+  - name: generate entrypoint
+    image: debian:stretch
+    commands:
+      - apt-get update
+      - apt-get install -y ruby ruby-dev rubygems build-essential
+      - gem install --no-ri --no-rdoc fpm
+      - make generate-entrypoint
+
+  - name: dryrun
+    image: plugins/docker
+    settings:
+      dry_run: true
+      username: lodge93+drone
+      dockerfile: build/Dockerfile
+      repo: quay.io/lodge93/drone-fpm
+      registry: quay.io
+      password:
+        from_secret: docker_password
+      tags:
+        - linux-arm64
+    when:
+      branch:
+        exclude:
+          - master
+
+  - name: publish docker image
+    image: plugins/docker
+    settings:
+      username: lodge93+drone
+      dockerfile: build/Dockerfile
+      repo: quay.io/lodge93/drone-fpm
+      registry: quay.io
+      password:
+        from_secret: docker_password
+      tags:
+        - linux-arm64
+    when:
+      branch:
+        include:
+          - master
+
+depends_on:
+  - testing
+
+---
+kind: pipeline
+name: linux-arm
+
+platform:
+  os: linux
+  arch: arm
+
+steps:
+  - name: build entrypoint generator
+    image: golang:1.11
+    environment:
+      GO111MODULE: on
+    commands:
+      - make build
+
+  - name: generate entrypoint
+    image: debian:stretch
+    commands:
+      - apt-get update
+      - apt-get install -y ruby ruby-dev rubygems build-essential
+      - gem install --no-ri --no-rdoc fpm
+      - make generate-entrypoint
+
+  - name: dryrun
+    image: plugins/docker
+    settings:
+      dry_run: true
+      username: lodge93+drone
+      dockerfile: build/Dockerfile
+      repo: quay.io/lodge93/drone-fpm
+      registry: quay.io
+      password:
+        from_secret: docker_password
+      tags:
+        - linux-arm
+    when:
+      branch:
+        exclude:
+          - master
+
+  - name: publish docker image
+    image: plugins/docker
+    settings:
+      username: lodge93+drone
+      dockerfile: build/Dockerfile
+      repo: quay.io/lodge93/drone
+      registry: quay.io
+      password:
+        from_secret: docker_password
+      tags:
+        - linux-arm
+    when:
+      branch:
+        include:
+          - master
+
+depends_on:
+  - testing
+
+---
+kind: pipeline
+name: publish and test
+
+platform:
+  os: linux
+  arch: amd64
+
+steps:
+  - name: manifest
+    pull: always
+    image: plugins/manifest:1
+    settings:
+      ignore_missing: true
+      username: lodge93+drone
+      password:
+        from_secret: docker_password
+      target: quay.io/lodge93/drone-fpm:latest
+      template: quay.io/lodge93/drone-fpm:OS-ARCH
+      platforms:
+        - linux/amd64
+        - linux/arm
+        - linux/arm64
+
   - name: end to end test
-    image: quay.io/lodge93/drone-fpm:${DRONE_COMMIT_SHA}
+    image: quay.io/lodge93/drone-fpm:latest
+    pull: true
     settings:
       name: generate-entrypoint
-      version: ${DRONE_COMMIT_SHA}
+      version: 0.0.1
       input_type: dir
       output_type: deb
-      package: out/generate-entrypoint-${DRONE_COMMIT_SHA}.deb
+      package: out/generate-entrypoint_0.0.1_amd64.deb
       deb_systemd: test/generate-entrypoint.service
       command_arguments: out/generate-entrypoint=/usr/local/bin/
+
+trigger:
+  branch:
+    - master
+
+depends_on:
+  - linux-amd64
+  - linux-arm64
+  - linux-arm
