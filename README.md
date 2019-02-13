@@ -1,7 +1,6 @@
 # Drone FPM Plugin
 [![Build Status](https://cloud.drone.io/api/badges/lodge93/drone-fpm/status.svg)](https://cloud.drone.io/lodge93/drone-fpm)
 [![GoDoc](https://godoc.org/github.com/lodge93/drone-fpm?status.svg)](https://godoc.org/github.com/lodge93/drone-fpm)
-[![Docker Repository on Quay](https://quay.io/repository/lodge93/drone-fpm/status "Docker Repository on Quay")](https://quay.io/repository/lodge93/drone-fpm)
 
 [Drone](https://drone.io/) plugin for [fpm](https://github.com/jordansissel/fpm).
 
