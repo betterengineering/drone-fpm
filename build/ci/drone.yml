@@ -41,10 +41,10 @@ steps:
     image: plugins/docker
     settings:
       dry_run: true
-      username: lodge93+drone
       dockerfile: build/Dockerfile
-      repo: quay.io/lodge93/drone-fpm
-      registry: quay.io
+      repo: lodge93/drone-fpm
+      username:
+        from_secret: docker_username
       password:
         from_secret: docker_password
       tags:
@@ -57,17 +57,17 @@ steps:
   - name: publish docker image
     image: plugins/docker
     settings:
-      username: lodge93+drone
       dockerfile: build/Dockerfile
-      repo: quay.io/lodge93/drone-fpm
-      registry: quay.io
+      repo: lodge93/drone-fpm
+      username:
+        from_secret: docker_username
       password:
         from_secret: docker_password
       tags:
         - linux-amd64
     when:
       branch:
-        include:
+        exclude:
           - master
 
 depends_on:
@@ -101,10 +101,10 @@ steps:
     image: plugins/docker
     settings:
       dry_run: true
-      username: lodge93+drone
       dockerfile: build/Dockerfile
-      repo: quay.io/lodge93/drone-fpm
-      registry: quay.io
+      repo: lodge93/drone-fpm
+      username:
+        from_secret: docker_username
       password:
         from_secret: docker_password
       tags:
@@ -117,17 +117,17 @@ steps:
   - name: publish docker image
     image: plugins/docker
     settings:
-      username: lodge93+drone
       dockerfile: build/Dockerfile
-      repo: quay.io/lodge93/drone-fpm
-      registry: quay.io
+      repo: lodge93/drone-fpm
+      username:
+        from_secret: docker_username
       password:
         from_secret: docker_password
       tags:
         - linux-arm64
     when:
       branch:
-        include:
+        exclude:
           - master
 
 depends_on:
@@ -161,10 +161,10 @@ steps:
     image: plugins/docker
     settings:
       dry_run: true
-      username: lodge93+drone
       dockerfile: build/Dockerfile
-      repo: quay.io/lodge93/drone-fpm
-      registry: quay.io
+      repo: lodge93/drone-fpm
+      username:
+        from_secret: docker_username
       password:
         from_secret: docker_password
       tags:
@@ -177,17 +177,17 @@ steps:
   - name: publish docker image
     image: plugins/docker
     settings:
-      username: lodge93+drone
       dockerfile: build/Dockerfile
-      repo: quay.io/lodge93/drone
-      registry: quay.io
+      repo: lodge93/drone-fpm
+      username:
+        from_secret: docker_username
       password:
         from_secret: docker_password
       tags:
         - linux-arm
     when:
       branch:
-        include:
+        exclude:
           - master
 
 depends_on:
@@ -202,23 +202,31 @@ platform:
   arch: amd64
 
 steps:
+  - name: build entrypoint generator
+    image: golang:1.11
+    environment:
+      GO111MODULE: on
+    commands:
+      - make build
+
   - name: manifest
     pull: always
     image: plugins/manifest:1
     settings:
       ignore_missing: true
-      username: lodge93+drone
+      username:
+        from_secret: docker_username
       password:
         from_secret: docker_password
-      target: quay.io/lodge93/drone-fpm:latest
-      template: quay.io/lodge93/drone-fpm:OS-ARCH
+      target: lodge93/drone-fpm:latest
+      template: lodge93/drone-fpm:OS-ARCH
       platforms:
         - linux/amd64
         - linux/arm
         - linux/arm64
 
   - name: end to end test
-    image: quay.io/lodge93/drone-fpm:latest
+    image: lodge93/drone-fpm:latest
     pull: true
     settings:
       name: generate-entrypoint
