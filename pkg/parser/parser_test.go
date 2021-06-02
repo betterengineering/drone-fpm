@@ -16,10 +16,11 @@
 package parser_test
 
 import (
-	"github.com/lodge93/drone-fpm/pkg/parser"
+	"reflect"
 	"strings"
 	"testing"
-	"reflect"
+
+	"github.com/betterengineering/drone-fpm/pkg/parser"
 )
 
 const FPMHelpOutput = `
@@ -274,7 +275,7 @@ Options:
     -h, --help                    print help
 `
 
-func SetupTest() (*parser.Parser) {
+func SetupTest() *parser.Parser {
 	lines := strings.Split(string(FPMHelpOutput), "\n")
 	return &parser.Parser{
 		Lines: lines,
@@ -291,18 +292,18 @@ func TestParserParse(t *testing.T) {
 
 	// Contains
 	assertFlagsContain(t, parsedFlags, parser.ParsedFlag{
-		Option: "--output-type",
-		EnvVar: "PLUGIN_OUTPUT_TYPE",
+		Option:   "--output-type",
+		EnvVar:   "PLUGIN_OUTPUT_TYPE",
 		HasInput: true,
 	})
 	assertFlagsContain(t, parsedFlags, parser.ParsedFlag{
-		Option: "--rpm-user",
-		EnvVar: "PLUGIN_RPM_USER",
+		Option:   "--rpm-user",
+		EnvVar:   "PLUGIN_RPM_USER",
 		HasInput: true,
 	})
 	assertFlagsContain(t, parsedFlags, parser.ParsedFlag{
-		Option: "--verbose",
-		EnvVar: "PLUGIN_VERBOSE",
+		Option:   "--verbose",
+		EnvVar:   "PLUGIN_VERBOSE",
 		HasInput: false,
 	})
 

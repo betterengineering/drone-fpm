@@ -1,6 +1,6 @@
 # Drone FPM Plugin
-[![Build Status](https://cloud.drone.io/api/badges/lodge93/drone-fpm/status.svg)](https://cloud.drone.io/lodge93/drone-fpm)
-[![GoDoc](https://godoc.org/github.com/lodge93/drone-fpm?status.svg)](https://godoc.org/github.com/lodge93/drone-fpm)
+[![Build Status](https://cloud.drone.io/api/badges/betterengineering/drone-fpm/status.svg)](https://cloud.drone.io/betterengineering/drone-fpm)
+[![GoDoc](https://godoc.org/github.com/betterengineering/drone-fpm?status.svg)](https://godoc.org/github.com/betterengineering/drone-fpm)
 
 [Drone](https://drone.io/) plugin for [fpm](https://github.com/jordansissel/fpm).
 
@@ -32,7 +32,7 @@ This example creates a Debian package with a systemd unit file for a binary name
 
 ```yaml
 - name: build debian package
-  image: quay.io/lodge93/drone-fpm:latest
+  image: quay.io/betterengineering/drone-fpm:latest
   settings:
     name: foo
     version: v0.0.1
@@ -47,7 +47,7 @@ This example creates a Debian package with a systemd unit file for a binary name
 This example shows how to run this plugin via `docker run`:
 
 ```bash
-docker run --rm -v $(PWD):/workdir -w /workdir -e PLUGIN_DEB_SYSTEMD=/workdir/test/generate-entrypoint.service -e PLUGIN_NAME=generate-entrypoint -e PLUGIN_VERSION=snapshot-$(git log -n 1 --pretty=format:"%H") -e PLUGIN_INPUT_TYPE=dir -e PLUGIN_OUTPUT_TYPE=deb -e PLUGIN_PACKAGE=/workdir/out/generate-entrypoint-snapshot-$(git log -n 1 --pretty=format:"%H").deb -e PLUGIN_COMMAND_ARGUMENTS=/workdir/out/generate-entrypoint=/usr/local/bin/ quay.io/lodge93/drone-fpm:$(git log -n 1 --pretty=format:"%H")
+docker run --rm -v $(PWD):/workdir -w /workdir -e PLUGIN_DEB_SYSTEMD=/workdir/test/generate-entrypoint.service -e PLUGIN_NAME=generate-entrypoint -e PLUGIN_VERSION=snapshot-$(git log -n 1 --pretty=format:"%H") -e PLUGIN_INPUT_TYPE=dir -e PLUGIN_OUTPUT_TYPE=deb -e PLUGIN_PACKAGE=/workdir/out/generate-entrypoint-snapshot-$(git log -n 1 --pretty=format:"%H").deb -e PLUGIN_COMMAND_ARGUMENTS=/workdir/out/generate-entrypoint=/usr/local/bin/ quay.io/betterengineering/drone-fpm:$(git log -n 1 --pretty=format:"%H")
 ```
 
 ## Tests

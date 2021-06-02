@@ -18,10 +18,11 @@ package generator_test
 import (
 	"testing"
 
-	"github.com/lodge93/drone-fpm/pkg/generator"
-	"github.com/lodge93/drone-fpm/pkg/parser"
 	"io/ioutil"
 	"os"
+
+	"github.com/betterengineering/drone-fpm/pkg/generator"
+	"github.com/betterengineering/drone-fpm/pkg/parser"
 )
 
 const ExpectedOutput = `#!/bin/bash
@@ -50,13 +51,13 @@ func TestNewGenerator(t *testing.T) {
 	g := generator.NewGenerator()
 	err = g.GenerateEntrypoint("testdata/entrypoint.sh", tmpFile.Name(), []parser.ParsedFlag{
 		{
-			Option: "--foo",
-			EnvVar: "PLUGIN_FOO",
+			Option:   "--foo",
+			EnvVar:   "PLUGIN_FOO",
 			HasInput: false,
 		},
 		{
-			Option: "--bar",
-			EnvVar: "PLUGIN_FOO",
+			Option:   "--bar",
+			EnvVar:   "PLUGIN_FOO",
 			HasInput: true,
 		},
 	})
