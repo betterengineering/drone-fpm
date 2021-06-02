@@ -1,1 +1,1 @@
-module github.com/lodge93/drone-fpm
+module github.com/betterengineering/drone-fpm

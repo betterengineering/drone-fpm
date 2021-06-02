@@ -18,8 +18,8 @@ package main
 import (
 	"log"
 
-	"github.com/lodge93/drone-fpm/pkg/parser"
-	"github.com/lodge93/drone-fpm/pkg/generator"
+	"github.com/betterengineering/drone-fpm/pkg/generator"
+	"github.com/betterengineering/drone-fpm/pkg/parser"
 )
 
 func main() {

@@ -17,13 +17,14 @@
 package generator
 
 import (
-	"text/template"
-	"github.com/lodge93/drone-fpm/pkg/parser"
 	"os"
+	"text/template"
+
+	"github.com/betterengineering/drone-fpm/pkg/parser"
 )
 
 // Generator is used to generate the entrypoint for the drone plugin.
-type Generator struct {}
+type Generator struct{}
 
 // NewGenerator creates a new, initialized generator.
 func NewGenerator() *Generator {
