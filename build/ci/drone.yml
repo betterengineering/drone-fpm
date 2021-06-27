@@ -42,7 +42,7 @@ steps:
     settings:
       dry_run: true
       dockerfile: build/Dockerfile
-      repo: betterengineering/drone-fpm
+      repo: lodge93/drone-fpm
       username:
         from_secret: docker_username
       password:
@@ -58,7 +58,7 @@ steps:
     image: plugins/docker
     settings:
       dockerfile: build/Dockerfile
-      repo: betterengineering/drone-fpm
+      repo: lodge93/drone-fpm
       username:
         from_secret: docker_username
       password:
@@ -102,7 +102,7 @@ steps:
     settings:
       dry_run: true
       dockerfile: build/Dockerfile
-      repo: betterengineering/drone-fpm
+      repo: lodge93/drone-fpm
       username:
         from_secret: docker_username
       password:
@@ -118,7 +118,7 @@ steps:
     image: plugins/docker
     settings:
       dockerfile: build/Dockerfile
-      repo: betterengineering/drone-fpm
+      repo: lodge93/drone-fpm
       username:
         from_secret: docker_username
       password:
@@ -162,7 +162,7 @@ steps:
     settings:
       dry_run: true
       dockerfile: build/Dockerfile
-      repo: betterengineering/drone-fpm
+      repo: lodge93/drone-fpm
       username:
         from_secret: docker_username
       password:
@@ -178,7 +178,7 @@ steps:
     image: plugins/docker
     settings:
       dockerfile: build/Dockerfile
-      repo: betterengineering/drone-fpm
+      repo: lodge93/drone-fpm
       username:
         from_secret: docker_username
       password:
@@ -218,15 +218,15 @@ steps:
         from_secret: docker_username
       password:
         from_secret: docker_password
-      target: betterengineering/drone-fpm:latest
-      template: betterengineering/drone-fpm:OS-ARCH
+      target: lodge93/drone-fpm:latest
+      template: lodge93/drone-fpm:OS-ARCH
       platforms:
         - linux/amd64
         - linux/arm
         - linux/arm64
 
   - name: end to end test
-    image: betterengineering/drone-fpm:latest
+    image: lodge93/drone-fpm:latest
     pull: true
     settings:
       name: generate-entrypoint
